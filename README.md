@@ -9,3 +9,4 @@ Build an ML classifier to clasify products based on images I have scraped from w
 - serve the model in my website
 - explore torchvision built in transforms
 - have fun
+- explore my architecture
