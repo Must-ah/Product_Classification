@@ -11,6 +11,7 @@ from ignite.metrics import ClassificationReport
 from ignite.contrib.engines.common import save_best_model_by_val_score
 import ignite.distributed as idist
 import torch
+# source https://colab.research.google.com/github/pytorch/ignite/blob/master/assets/tldr/teaser.ipynb#scrollTo=dFglXKeKOgdW
 # dependenciues
 
 # ignite
@@ -30,6 +31,8 @@ def training(config):
     # Setup model trainer and evaluator
     trainer, train_evaluator, validation_evaluator, test_evaluator, pbar = create_trainer(
         model, optimizer, criterion, lr_scheduler, config)
+    if config['train_now'] is not True:
+        return trainer, model, optimizer,criterion ,lr_scheduler, train_loader
 
     def thresholded_output_transform(output):
         y_pred, y = output
@@ -136,6 +139,7 @@ def training(config):
                                                       "best_n_saved", 2)
                                                   )
     evaluator.add_event_handler(Events.EPOCH_COMPLETED, bestModelSaver)
+
     trainer.run(train_loader, max_epochs=config.get("max_epochs", 3))
 
     if idist.get_rank() == 0:

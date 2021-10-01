@@ -1,9 +1,10 @@
-from ignite.engine import Engine, Events
-from pathlib import Path
-from ignite.contrib.handlers import ProgressBar
-from ignite.handlers import ModelCheckpoint, Checkpoint, DiskSaver
-from ignite.metrics import Accuracy, Loss, RunningAverage
 import torch
+from ignite.metrics import Accuracy, Loss, RunningAverage
+from ignite.handlers import ModelCheckpoint, Checkpoint, DiskSaver
+from ignite.contrib.handlers import ProgressBar
+from pathlib import Path
+from ignite.engine import Engine, Events
+# source https://colab.research.google.com/github/pytorch/ignite/blob/master/assets/tldr/teaser.ipynb#scrollTo=dFglXKeKOgdW
 
 
 def create_trainer(model, optimizer, criterion, lr_scheduler, config):
@@ -100,9 +101,12 @@ def create_trainer(model, optimizer, criterion, lr_scheduler, config):
                'optimizer': optimizer,
                'lr_scheduler': lr_scheduler,
                }
-    
-    handler = Checkpoint(to_save, DiskSaver(
-        config['trainer_save_path'], create_dir=True))
+
+    handler = Checkpoint(to_save,
+                         DiskSaver(config['trainer_save_path'],
+                                   create_dir=True, require_empty=config['require_empty']
+                                   )
+                         )
     trainer.add_event_handler(Events.EPOCH_COMPLETED, handler)
 
     return trainer, train_evaluator, validation_evaluator, test_evaluator, pbar
