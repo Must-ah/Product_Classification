@@ -23,9 +23,9 @@ def training(config):
     model, optimizer, criterion, lr_scheduler = initializeModel(config)
     model.to(config.get('device', 'cpu'))
     # Setup model trainer and evaluator
-    trainer, train_evaluator, validation_evaluator, test_evaluator, evaluator, pbar = create_trainer(
-        model, optimizer, criterion, lr_scheduler, config, data
-    )
+    trainer, evaluator = create_trainer(model, optimizer, criterion,
+                                        lr_scheduler, config, data
+                                        )
     data_loader, _, _ = data
     train_loader, train_sampler = data_loader
 
@@ -40,9 +40,9 @@ def training(config):
             evaluators={"validation": evaluator,
                         # 'cr': evaluator,
                         # 'loss': trainer,
-                        'val_NLLLoss': validation_evaluator,
+                        # 'val_NLLLoss': validation_evaluator,
                         # 'val_acc': validation_evaluator,
-                        'train_NLLLoss': train_evaluator,
+                        # 'train_NLLLoss': train_evaluator,
                         # 'train_acc': train_evaluator,
                         },
             log_every_iters=1,
