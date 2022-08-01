@@ -11,7 +11,7 @@ def load_img(img_path: str, img_name: str):
     """
     return plt.imread(img_path + '/' + img_name)
 
-
+import numpy as np
 def plot_img(img: np.array):
     """Plots an image.
     Args:
